@@ -4,6 +4,7 @@ import { fileURLToPath } from 'node:url';
 import { SfCommand, Flags } from '@salesforce/sf-plugins-core';
 import { Connection, Messages } from '@salesforce/core';
 import { CustomField, CustomValue, GlobalValueSet, StandardValueSet } from '@jsforce/jsforce-node/lib/api/metadata.js';
+import * as fs from 'fs';
 
 // eslint-disable-next-line
 Messages.importMessagesDirectory(dirname(fileURLToPath(import.meta.url)));
@@ -44,6 +45,8 @@ export default class PicklistutilsUpdatevalues extends SfCommand<PicklistutilsUp
   public async run(): Promise<PicklistutilsUpdatevaluesResult> {
     const { flags } = await this.parse(PicklistutilsUpdatevalues);
     const conn = flags['target-org'].getConnection(flags['api-version']);
+    const separator = flags['separator'] || ',';
+    const eol = flags['eol'] || '\n';
 
     this.spinner.start('Getting Metadata');
     const fieldValues = await this.getFieldValues(conn, flags['fieldapiname']);
@@ -52,11 +55,11 @@ export default class PicklistutilsUpdatevalues extends SfCommand<PicklistutilsUp
     this.spinner.stop('done !');
 
     this.spinner.start('Parsing file');
-    // let csvValues = this.parseFile(flags['filename'], flags['separator'], flags['eol']);
+    let csvValues = this.parseFile(flags['filename'], separator, eol);
     this.spinner.stop('done !');
 
     // eslint-disable-next-line
-    // console.log(csvValues);
+    console.log(csvValues);
 
     return {
       path: 'src/commands/picklistutils/updatevalues.ts',
@@ -115,20 +118,23 @@ export default class PicklistutilsUpdatevalues extends SfCommand<PicklistutilsUp
     return fieldName.includes('__c');
   }
 
-  // public parseFile(fileName: string, separator: string, endOfLine: string){
-  //   var fs = require('fs');
-  //   let contents = fs.readFileSync(fileName, 'utf-8').split(endOfLine);
+  public parseFile(fileName: string, separator: string, endOfLine: string) {
+    // var fs = require('fs');
+    let contents = fs.readFileSync(fileName, 'utf-8').split(endOfLine);
 
-  //   //Parse csv file.
-  //   let csvValues: string[] = [];
+    //Parse csv file.
+    let csvValues: {
+      [key: string]: string;
+    } = {};
 
-  //   contents.forEach((line: string) => {
-  //       let csvColumn: string[] = line.split(separator);
-  //       if(csvColumn[0] != ''){
-  //           csvValues[csvColumn[0]] = csvColumn[1];
-  //       }
-  //   });
+    contents.forEach((line: string) => {
+      let csvColumn: string[] = line.split(separator);
 
-  //   return csvValues;
-  // }
+      if (csvColumn[0] != '') {
+        csvValues[csvColumn[0]] = csvColumn[1];
+      }
+    });
+
+    return csvValues;
+  }
 }
