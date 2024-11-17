@@ -47,19 +47,15 @@ export default class PicklistutilsUpdatevalues extends SfCommand<PicklistutilsUp
     const conn = flags['target-org'].getConnection(flags['api-version']);
     const separator = flags['separator'] || ',';
     const eol = flags['eol'] || '\n';
+    const fieldApiName = flags['fieldapiname'];
 
     this.spinner.start('Getting Metadata');
-    const fieldValues: CustomValue[] = (await this.getFieldValues(conn, flags['fieldapiname'])) || [];
-    // eslint-disable-next-line
-    console.log(fieldValues);
-    this.spinner.stop('done !');
+    const fieldValues: CustomValue[] = (await this.getFieldValues(conn, fieldApiName)) || [];
+    this.spinner.stop('✅');
 
     this.spinner.start('Parsing file');
     let csvValues: { [key: string]: string } = this.parseFile(flags['filename'], separator, eol);
-    this.spinner.stop('done !');
-
-    // eslint-disable-next-line
-    // console.log(csvValues);
+    this.spinner.stop('✅');
 
     // Replace old values by new ones.
     let valuesToDeactivate: CustomValue[] = [];
@@ -67,24 +63,88 @@ export default class PicklistutilsUpdatevalues extends SfCommand<PicklistutilsUp
       const label = fieldValue?.label;
       if (label && fieldValue.fullName != csvValues[label]) {
         var newVal = csvValues[label];
-        // console.log('label', label);
-        // console.log('newVal', newVal);
 
         if (newVal != undefined) {
           let valtodeactivate: CustomValue = Object.assign({}, fieldValue);
-          // console.log(valtodeactivate);
           valtodeactivate.isActive = false;
           valuesToDeactivate.push(valtodeactivate);
           fieldValue.fullName = newVal;
         }
       }
     });
-    console.log('after: ', fieldValues);
-    console.log('valuesToDeactivate: ', valuesToDeactivate);
+
+    let newValues: CustomValue[] = [];
+    Object.entries(csvValues).forEach((csvValue) => {
+      newValues.push({
+        fullName: csvValue[1],
+        label: csvValue[0],
+        isActive: true,
+      } as CustomValue);
+    });
+
+    // Deactivate old values
+    if (valuesToDeactivate.length > 0) {
+      this.spinner.start('Deactivating old values');
+      await this.updateValues(conn, fieldApiName, valuesToDeactivate);
+      this.spinner.stop('✅');
+    }
+
+    this.spinner.start('Updating new values');
+    await this.updateValues(conn, fieldApiName, newValues);
+    this.spinner.stop('✅');
 
     return {
       path: 'src/commands/picklistutils/updatevalues.ts',
     };
+  }
+
+  public async updateValues(conn: Connection, fieldName: string, valuesToUpdate: CustomValue[]) {
+    let updateResult;
+
+    if (!this.isCustomField(fieldName)) {
+      // standard field, update globalValueSet
+      const standardValueSetMetadata = (await conn.metadata.read('StandardValueSet', [fieldName]))[0];
+      updateResult = await conn.metadata.update('StandardValueSet', [
+        {
+          fullName: standardValueSetMetadata.fullName,
+          standardValue: valuesToUpdate,
+        },
+      ]);
+    } else {
+      // custom field
+      const fieldMetadata = (await conn.metadata.read('CustomField', [fieldName]))[0];
+      let valueSetName = fieldMetadata?.valueSet?.valueSetName;
+
+      if (valueSetName) {
+        //global picklist
+        const globalValueSetMetadata = (await conn.metadata.read('GlobalValueSet', [valueSetName]))[0];
+        updateResult = await conn.metadata.update('GlobalValueSet', [
+          {
+            fullName: globalValueSetMetadata.fullName + '__gvs',
+            masterLabel: globalValueSetMetadata.masterLabel,
+            customValue: valuesToUpdate,
+          },
+        ]);
+      } else {
+        // local picklist
+        updateResult = await conn.metadata.update('CustomField', [
+          {
+            fullName: fieldName,
+            type: 'Picklist',
+            label: fieldMetadata.label,
+            valueSet: {
+              valueSetDefinition: {
+                value: valuesToUpdate,
+              },
+            },
+          },
+        ]);
+      }
+    }
+
+    if (!updateResult[0]?.success) {
+      this.error('Error : ' + updateResult[0]?.errors[0]?.statusCode + ' - ' + updateResult[0]?.errors[0]?.message);
+    }
   }
 
   // eslint-disable-next-line
@@ -114,7 +174,6 @@ export default class PicklistutilsUpdatevalues extends SfCommand<PicklistutilsUp
         return;
       }
 
-      // eslint-disable-next-line
       let valueSetName = fieldMetadata?.valueSet?.valueSetName;
       if (valueSetName) {
         // global picklist get GlobalValueSet values
