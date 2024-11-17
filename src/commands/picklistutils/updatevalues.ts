@@ -49,17 +49,38 @@ export default class PicklistutilsUpdatevalues extends SfCommand<PicklistutilsUp
     const eol = flags['eol'] || '\n';
 
     this.spinner.start('Getting Metadata');
-    const fieldValues = await this.getFieldValues(conn, flags['fieldapiname']);
+    const fieldValues: CustomValue[] = (await this.getFieldValues(conn, flags['fieldapiname'])) || [];
     // eslint-disable-next-line
     console.log(fieldValues);
     this.spinner.stop('done !');
 
     this.spinner.start('Parsing file');
-    let csvValues = this.parseFile(flags['filename'], separator, eol);
+    let csvValues: { [key: string]: string } = this.parseFile(flags['filename'], separator, eol);
     this.spinner.stop('done !');
 
     // eslint-disable-next-line
-    console.log(csvValues);
+    // console.log(csvValues);
+
+    // Replace old values by new ones.
+    let valuesToDeactivate: CustomValue[] = [];
+    fieldValues.forEach((fieldValue) => {
+      const label = fieldValue?.label;
+      if (label && fieldValue.fullName != csvValues[label]) {
+        var newVal = csvValues[label];
+        // console.log('label', label);
+        // console.log('newVal', newVal);
+
+        if (newVal != undefined) {
+          let valtodeactivate: CustomValue = Object.assign({}, fieldValue);
+          // console.log(valtodeactivate);
+          valtodeactivate.isActive = false;
+          valuesToDeactivate.push(valtodeactivate);
+          fieldValue.fullName = newVal;
+        }
+      }
+    });
+    console.log('after: ', fieldValues);
+    console.log('valuesToDeactivate: ', valuesToDeactivate);
 
     return {
       path: 'src/commands/picklistutils/updatevalues.ts',
