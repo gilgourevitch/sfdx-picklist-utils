@@ -1,6 +1,6 @@
 {
   "name": "sfdx-picklist-utils",
-  "description": "Utils to interact with picklist fields",
+  "description": "Utils commands to interact with picklist fields",
   "version": "1.0.0",
   "dependencies": {
     "@oclif/core": "^4",
