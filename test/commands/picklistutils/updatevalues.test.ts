@@ -3,7 +3,7 @@ import { expect } from 'chai';
 import { stubSfCommandUx } from '@salesforce/sf-plugins-core';
 import PicklistutilsUpdatevalues from '../../../src/commands/picklistutils/updatevalues.js';
 
-describe('picklistutils/updatevalues', () => {
+describe('picklistutils updatevalues', () => {
   const $$ = new TestContext();
   let sfCommandStubs: ReturnType<typeof stubSfCommandUx>;
 

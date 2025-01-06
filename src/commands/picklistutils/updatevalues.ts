@@ -1,13 +1,12 @@
 /* eslint-disable */
-import { dirname } from 'node:path';
-import { fileURLToPath } from 'node:url';
+// import { dirname } from 'node:path';
+// import { fileURLToPath } from 'node:url';
+import * as fs from 'node:fs';
 import { SfCommand, Flags } from '@salesforce/sf-plugins-core';
 import { Connection, Messages } from '@salesforce/core';
 import { CustomField, CustomValue, GlobalValueSet, StandardValueSet } from '@jsforce/jsforce-node/lib/api/metadata.js';
-import * as fs from 'fs';
 
-// eslint-disable-next-line
-Messages.importMessagesDirectory(dirname(fileURLToPath(import.meta.url)));
+Messages.importMessagesDirectoryFromMetaUrl(import.meta.url)
 const messages = Messages.loadMessages('sfdx-picklist-utils', 'picklistutils.updatevalues');
 
 export type PicklistutilsUpdatevaluesResult = {
