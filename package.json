@@ -1,7 +1,7 @@
 {
   "name": "sfdx-picklist-utils",
   "description": "Toolbox for picklists.",
-  "version": "1.0.13",
+  "version": "1.0.19",
   "dependencies": {
     "@oclif/core": "^4",
     "@salesforce/core": "^8",
@@ -22,7 +22,7 @@
     "node": ">=18.0.0"
   },
   "files": [
-    "/lib",
+    "/dist",
     "/messages",
     "/oclif.manifest.json",
     "/oclif.lock"
@@ -38,7 +38,7 @@
   ],
   "license": "BSD-3-Clause",
   "oclif": {
-    "commands": "./lib/commands",
+    "commands": "./dist/commands",
     "bin": "sf",
     "topicSeparator": " ",
     "devPlugins": [
