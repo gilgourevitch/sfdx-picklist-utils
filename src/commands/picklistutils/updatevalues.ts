@@ -20,8 +20,8 @@ export default class PicklistutilsUpdatevalues extends SfCommand<PicklistutilsUp
   public static readonly examples = messages.getMessages('examples');
 
   public static readonly flags = {
-    fieldapiname: Flags.string({
-      summary: messages.getMessage('flags.fieldapiname.summary'),
+    'field-api-name': Flags.string({
+      summary: messages.getMessage('flags.field-api-name.summary'),
       char: 'a',
       required: true,
     }),
@@ -51,7 +51,7 @@ export default class PicklistutilsUpdatevalues extends SfCommand<PicklistutilsUp
     const conn = flags['target-org'].getConnection(flags['api-version']);
     const separator = flags['separator'] || ',';
     const eol = flags['eol'] || '\n';
-    const fieldApiName = flags['fieldapiname'];
+    const fieldApiName = flags['field-api-name'];
     const hascolumnslabels = flags['has-columns-labels'] || false;
 
     this.spinner.start('Getting Metadata');
