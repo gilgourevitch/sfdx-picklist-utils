@@ -6,7 +6,7 @@ import { SfCommand, Flags } from '@salesforce/sf-plugins-core';
 import { Connection, Messages } from '@salesforce/core';
 import { CustomField, CustomValue, GlobalValueSet, StandardValueSet } from '@jsforce/jsforce-node/lib/api/metadata.js';
 
-Messages.importMessagesDirectoryFromMetaUrl(import.meta.url)
+Messages.importMessagesDirectoryFromMetaUrl(import.meta.url);
 const messages = Messages.loadMessages('sfdx-picklist-utils', 'picklistutils.updatevalues');
 
 export type PicklistutilsUpdatevaluesResult = {
@@ -39,6 +39,10 @@ export default class PicklistutilsUpdatevalues extends SfCommand<PicklistutilsUp
     }),
     'target-org': Flags.requiredOrg(),
     'api-version': Flags.orgApiVersion(),
+    'has-columns-labels': Flags.boolean({
+      summary: messages.getMessage('flags.has-columns-labels.summary'),
+      char: 'l',
+    }),
   };
 
   public async run(): Promise<PicklistutilsUpdatevaluesResult> {
@@ -47,13 +51,14 @@ export default class PicklistutilsUpdatevalues extends SfCommand<PicklistutilsUp
     const separator = flags['separator'] || ',';
     const eol = flags['eol'] || '\n';
     const fieldApiName = flags['fieldapiname'];
+    const hascolumnslabels = flags['has-columns-labels'] || false;
 
     this.spinner.start('Getting Metadata');
     const fieldValues: CustomValue[] = (await this.getFieldValues(conn, fieldApiName)) || [];
     this.spinner.stop('✅');
 
     this.spinner.start('Parsing file');
-    let csvValues: { [key: string]: string } = this.parseFile(flags['filename'], separator, eol);
+    let csvValues: { [key: string]: string } = this.parseFile(flags['filename'], hascolumnslabels, separator, eol);
     this.spinner.stop('✅');
 
     // Replace old values by new ones.
@@ -197,16 +202,20 @@ export default class PicklistutilsUpdatevalues extends SfCommand<PicklistutilsUp
     return fieldName.includes('__c');
   }
 
-  public parseFile(fileName: string, separator: string, endOfLine: string) {
+  public parseFile(fileName: string, hascolumnslabels: boolean, separator: string, endOfLine: string) {
     // var fs = require('fs');
     let contents = fs.readFileSync(fileName, 'utf-8').split(endOfLine);
+
+    if(hascolumnslabels){
+      contents.shift();
+    } 
 
     //Parse csv file.
     let csvValues: {
       [key: string]: string;
     } = {};
 
-    contents.forEach((line: string) => {
+    contents.forEach((line: string) => { 
       let csvColumn: string[] = line.split(separator);
 
       if (csvColumn[0] != '') {

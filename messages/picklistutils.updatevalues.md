@@ -53,3 +53,7 @@ sf picklistutils updatevalues -a Account.myfield**c
 # info.hello
 
 info
+
+# flags.has-columns-labels.summary
+
+Set to true if the input file has columns labes, to ignore the first line.
