@@ -8,11 +8,11 @@ Updates picklist values from a csv file.
 To update a custom picklist field, using local values or a global value set, pass the full API field name.
 To update a standard picklist field, pass the StandardValueSet name.
 
-# flags.fieldapiname.summary
+# flags.field-api-name.summary
 
 Field name to target (Account.myfield_c for custom field). Use StandardValueSet name for standard fields (AccountType for standard field Account.Type)
 
-# flags.fieldapiname.description
+# flags.field-api-name.description
 
 Field name to target (Account.myfield_c for custom field). Use StandardValueSet name for standard fields (AccountType for standard field Account.Type)
 
