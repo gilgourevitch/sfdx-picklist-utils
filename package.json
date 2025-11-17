@@ -3,13 +3,13 @@
   "description": "Toolbox for picklists.",
   "version": "1.0.19",
   "dependencies": {
+    "@jsforce/jsforce-node": "^3.6.3",
     "@oclif/core": "^4",
     "@salesforce/core": "^8",
     "@salesforce/sf-plugins-core": "^12",
     "husky": "^9.1.7"
   },
   "devDependencies": {
-    "@jsforce/jsforce-node": "^3.6.3",
     "@oclif/plugin-command-snapshot": "^5.1.9",
     "@salesforce/cli-plugins-testkit": "^5.3.10",
     "@salesforce/dev-scripts": "^10",

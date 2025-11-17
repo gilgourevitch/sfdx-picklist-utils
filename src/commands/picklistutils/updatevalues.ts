@@ -4,7 +4,8 @@
 import * as fs from 'node:fs';
 import { SfCommand, Flags } from '@salesforce/sf-plugins-core';
 import { Connection, Messages } from '@salesforce/core';
-import { CustomField, CustomValue, GlobalValueSet, StandardValueSet } from '@jsforce/jsforce-node/lib/api/metadata.js';
+import { CustomValue } from '@jsforce/jsforce-node/lib/api/metadata.js';
+import * as common from '../../common/lib.js';
 
 Messages.importMessagesDirectoryFromMetaUrl(import.meta.url);
 const messages = Messages.loadMessages('sfdx-picklist-utils', 'picklistutils.updatevalues');
@@ -54,7 +55,7 @@ export default class PicklistutilsUpdatevalues extends SfCommand<PicklistutilsUp
     const hascolumnslabels = flags['has-columns-labels'] || false;
 
     this.spinner.start('Getting Metadata');
-    const fieldValues: CustomValue[] = (await this.getFieldValues(conn, fieldApiName)) || [];
+    const fieldValues: CustomValue[] = (await common.getFieldValues(conn, fieldApiName)) || [];
     this.spinner.stop('✅');
 
     this.spinner.start('Parsing file');
@@ -105,7 +106,7 @@ export default class PicklistutilsUpdatevalues extends SfCommand<PicklistutilsUp
   public async updateValues(conn: Connection, fieldName: string, valuesToUpdate: CustomValue[]) {
     let updateResult;
 
-    if (!this.isCustomField(fieldName)) {
+    if (!common.isCustomField(fieldName)) {
       // standard field, update globalValueSet
       const standardValueSetMetadata = (await conn.metadata.read('StandardValueSet', [fieldName]))[0];
       updateResult = await conn.metadata.update('StandardValueSet', [
@@ -149,57 +150,6 @@ export default class PicklistutilsUpdatevalues extends SfCommand<PicklistutilsUp
     if (!updateResult[0]?.success) {
       this.error('Error : ' + updateResult[0]?.errors[0]?.statusCode + ' - ' + updateResult[0]?.errors[0]?.message);
     }
-  }
-
-  // eslint-disable-next-line
-  public async getFieldValues(conn: Connection, fieldName: string) {
-    let fieldValues: CustomValue[] | undefined = [];
-    let fieldMetadata: CustomField;
-    let globalValueSetMetadata: GlobalValueSet;
-    let standardValueSetMetadata: StandardValueSet;
-
-    if (!this.isCustomField(fieldName)) {
-      // Standard field, get StandardValueSet values
-      standardValueSetMetadata = (await conn.metadata.read('StandardValueSet', [fieldName]))[0];
-
-      if (!standardValueSetMetadata?.standardValue || standardValueSetMetadata?.standardValue.length == 0) {
-        // not working
-        this.error('When updating standard field, fill the StandardValueSet name instead of field name.');
-      } else {
-        fieldValues = standardValueSetMetadata?.standardValue;
-      }
-    } else {
-      // custom field get field metadata
-      fieldMetadata = (await conn.metadata.read('CustomField', [fieldName]))[0];
-
-      // eslint-disable-next-line
-      if (!fieldMetadata?.fullName) {
-        this.error('Unknown field : ' + fieldName);
-        return;
-      }
-
-      let valueSetName = fieldMetadata?.valueSet?.valueSetName;
-      if (valueSetName) {
-        // global picklist get GlobalValueSet values
-        globalValueSetMetadata = (await conn.metadata.read('GlobalValueSet', [valueSetName]))[0];
-        fieldValues = globalValueSetMetadata.customValue || [];
-      } else {
-        // local picklist, get values
-        fieldValues = fieldMetadata?.valueSet?.valueSetDefinition?.value || [];
-      }
-      // console.log('-----------------',fieldValues);
-    }
-
-    if (!Array.isArray(fieldValues)) {
-      fieldValues = [fieldValues];
-    }
-
-    return fieldValues;
-  }
-
-  // eslint-disable-next-line class-methods-use-this
-  public isCustomField(fieldName: string): boolean {
-    return fieldName.includes('__c');
   }
 
   public parseFile(fileName: string, hascolumnslabels: boolean, separator: string, endOfLine: string) {
