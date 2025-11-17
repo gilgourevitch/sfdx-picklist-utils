@@ -206,16 +206,16 @@ export default class PicklistutilsUpdatevalues extends SfCommand<PicklistutilsUp
     // var fs = require('fs');
     let contents = fs.readFileSync(fileName, 'utf-8').split(endOfLine);
 
-    if(hascolumnslabels){
+    if (hascolumnslabels) {
       contents.shift();
-    } 
+    }
 
     //Parse csv file.
     let csvValues: {
       [key: string]: string;
     } = {};
 
-    contents.forEach((line: string) => { 
+    contents.forEach((line: string) => {
       let csvColumn: string[] = line.split(separator);
 
       if (csvColumn[0] != '') {
