@@ -22,68 +22,28 @@ This plugins provides commands to help users when updating values in piclist fie
 
 <!-- commands -->
 
-- [`sf picklistutils updatevalues`](#sf-picklistutils-updatevalues)
-
-## `sf picklistutils updatevalues`
-
-Update values in the targeted field based on labels and values in an input csv file.
-
-```
-USAGE
-  $ sf picklistutils updatevalues -a <value> -f <value> -o <value> [--json] [--flags-dir <value>] [-s <value>] [-e <value>] [--api-version <value>] [-l]
-
-FLAGS
-  -a, --fieldapiname=<value>  (required) Field name to target (Account.myfield_c for custom field). Use StandardValueSet name for standard
-                              fields (AccountType for standard field Account.Type)
-  -e, --eol=<value>           End of line to be used in the csv file. "\n" by default.
-  -f, --filename=<value>      (required) File containing new values.
-                              Two columns csv file containing pairs label,value
-  -l, --has-columns-labels    Set to true if the input file has columns labes, to ignore the first line.
-  -o, --target-org=<value>    (required) Username or alias of the target org. Not required if the `target-org` configuration variable is
-                              already set.
-  -s, --separator=<value>     Separator to be used in the csv file. Comma by default.
-      --api-version=<value>   Override the api version used for api requests made by this command
-
-
-GLOBAL FLAGS
-  --flags-dir=<value>  Import flag values from a directory.
-  --json               Format output as json.
-
-DESCRIPTION
-  Update picklist values based on a csv file.
-  To target a field named mypicklist__c on Account object, use Account.mypicklist__c. Works on local and global picklists.
-
-  To target a standard field based on a standard value set, for example Account.Type, use AccountType. You can find Standard Values Sets in Salesforce Help : https://developer.salesforce.com/docs/atlas.en-us.api_meta.meta/api_meta/standardvalueset_names.htm
-
-EXAMPLES
-  Import a file named newValues.csv into a custom field named mypicklist__c on Account :
-  $ sf picklistutils updatevalues --fieldapiname=Account.mypicklist__c filename=newValues.csv --target-org=MYORG
-
-  Import a file named newValues.csv into a custom field named mypicklist__c on Account, and ignore the first line of the csv file, containing columns labels :
-  $ sf picklistutils updatevalues --fieldapiname=Account.mypicklist__c filename=newValues.csv -l --target-org=MYORG
-
-  Import a file named newValues.csv into a standard field named Type on Account, and ignore the first line of the csv file, containing columns labels :
-  $ sf picklistutils updatevalues --fieldapiname=AccountType filename=newValues.csv -l --target-org=MYORG
-
-```
-
 - [`sf picklistutils generatefile`](#sf-picklistutils-generatefile)
+- [`sf picklistutils updatevalues`](#sf-picklistutils-updatevalues)
 
 ## `sf picklistutils generatefile`
 
-Generates a csv file with labels and values from the targeted field.
+Summary of a command.
 
 ```
 USAGE
-  $ sf picklistutils generatefile -f <value> -a <value> -o <value> [--json] [--flags-dir <value>] [-n <value>] [-s <value>] [-e <value>] [--api-version <value>] [-l]
+  $ sf picklistutils generatefile -f <value> -a <value> -o <value> [--json] [--flags-dir <value>] [-n <value>] [-s <value>] [-e
+    <value>] [--api-version <value>] [-l]
 
 FLAGS
-  -a, --field-api-name=<value>  (required) API Name of the field to extract values from.
+  -a, --field-api-name=<value>  (required) API Name of the field to extract values from (Account.myfield_c for custom
+                                field). Use StandardValueSet name for standard fields (AccountType for standard field
+                                Account.Type)
   -e, --eol=<value>             End of line to be used in the csv file. "\n" by default.
   -f, --output-file=<value>     (required) Path of the output file.
   -l, --include-columns-labels  Set to True if you want to include column labels.
   -n, --name=<value>            Description of a flag.
-  -o, --target-org=<value>      (required) Username or alias of the target org. Not required if the `target-org` configuration variable is already set.
+  -o, --target-org=<value>      (required) Username or alias of the target org. Not required if the `target-org`
+                                configuration variable is already set.
   -s, --separator=<value>       Separator to be used in the csv file. Comma by default.
       --api-version=<value>     Override the api version used for api requests made by this command
 
@@ -92,22 +52,56 @@ GLOBAL FLAGS
   --json               Format output as json.
 
 DESCRIPTION
-  Generate a csv file from labels and values from the targeted field.
+  Summary of a command.
 
-  To target a field named mypicklist__c on Account object, use Account.mypicklist__c. Works on local and global picklists.
-
-  To target a standard field based on a standard value set, for example Account.Type, use AccountType. You can find Standard Values Sets in Salesforce Help : https://developer.salesforce.com/docs/atlas.en-us.api_meta.meta/api_meta/standardvalueset_names.htm
+  More information about a command. Don't repeat the summary.
 
 EXAMPLES
-  Generate a file named output.csv from values of a custom field named mypicklist__c on Account :
-  $ sf picklistutils generatefield --field-api-name=Account.mypicklist__c output-file=output.csv --target-org=MYORG
+  $ sf picklistutils generatefile
 
-  Generate a file named output.csv, with columns names as 1st line, from values of a custom field named mypicklist__c on Account :
-  $ sf picklistutils generatefield --field-api-name=Account.mypicklist__c output-file=output.csv --target-org=MYORG -l
+FLAG DESCRIPTIONS
+  -n, --name=<value>  Description of a flag.
 
-  Generate a file named output.csv, with columns names as 1st line, from values of a standard field named Type on Account :
-  $ sf picklistutils generatefield --field-api-name=AccountType output-file=output.csv --target-org=MYORG -l
+    More information about a flag. Don't repeat the summary.
+```
 
+## `sf picklistutils updatevalues`
+
+Updates picklist values from a csv file.
+
+```
+USAGE
+  $ sf picklistutils updatevalues -a <value> -f <value> -o <value> [--json] [--flags-dir <value>] [-s <value>] [-e <value>]
+    [--api-version <value>] [-l]
+
+FLAGS
+  -a, --field-api-name=<value>  (required) Field name to target (Account.myfield_c for custom field). Use
+                                StandardValueSet name for standard fields (AccountType for standard field Account.Type)
+  -e, --eol=<value>             End of line to be used in the csv file. "\n" by default.
+  -f, --filename=<value>        (required) File containing new values.
+                                Two columns csv file containing pairs label,value
+  -l, --has-columns-labels      Set to true if the input file has columns labes, to ignore the first line.
+  -o, --target-org=<value>      (required) Username or alias of the target org. Not required if the `target-org`
+                                configuration variable is already set.
+  -s, --separator=<value>       Separator to be used in the csv file. Comma by default.
+      --api-version=<value>     Override the api version used for api requests made by this command
+
+GLOBAL FLAGS
+  --flags-dir=<value>  Import flag values from a directory.
+  --json               Format output as json.
+
+DESCRIPTION
+  Updates picklist values from a csv file.
+
+  Updates picklist values from a csv file.
+  To update a custom picklist field, using local values or a global value set, pass the full API field name.
+  To update a standard picklist field, pass the StandardValueSet name.
+
+EXAMPLES
+  To update the Standard Picklist AccountType :
+  $ sf picklistutils updatevalues -a AccountType
+  To update the Custom Picklist (local or global) named myfield**c on Account object :
+  $ sf picklistutils updatevalues -a Account.myfield**c
 ```
 
 <!-- commandsstop -->
