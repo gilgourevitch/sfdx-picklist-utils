@@ -73,10 +73,16 @@ export default class PicklistutilsGeneratefile extends SfCommand<PicklistutilsGe
     };
   }
 
-  public async generateFile(outputFile: string, fieldValues: CustomValue[], separator: string, eol: string, includeColumnsLabels: boolean) {
+  public async generateFile(
+    outputFile: string,
+    fieldValues: CustomValue[],
+    separator: string,
+    eol: string,
+    includeColumnsLabels: boolean
+  ) {
     let outputContent = '';
 
-    if(includeColumnsLabels){
+    if (includeColumnsLabels) {
       outputContent += 'Label' + separator + 'API Name' + eol;
     }
 
