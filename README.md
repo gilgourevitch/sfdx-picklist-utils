@@ -16,7 +16,7 @@ sf picklistutils updatevalues -h
 
 ## Usage
 
-This plugins provides commands to help users when updating values in piclist fields, especially chen labels and API values are different.
+This plugins provides commands to help users when updating values in picklist fields, especially when labels and API values are different.
 
 ## Commands
 
@@ -27,7 +27,7 @@ This plugins provides commands to help users when updating values in piclist fie
 
 ## `sf picklistutils generatefile`
 
-Summary of a command.
+Generates a csv file with 2 columns "Label" and "API Name". You can then update the csv file, and use it to re-import changes directly.
 
 ```
 USAGE
