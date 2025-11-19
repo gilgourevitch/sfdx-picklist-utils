@@ -20,12 +20,6 @@ export default class PicklistutilsGeneratefile extends SfCommand<PicklistutilsGe
   public static readonly examples = messages.getMessages('examples');
 
   public static readonly flags = {
-    name: Flags.string({
-      summary: messages.getMessage('flags.name.summary'),
-      description: messages.getMessage('flags.name.description'),
-      char: 'n',
-      required: false,
-    }),
     'output-file': Flags.string({
       summary: messages.getMessage('flags.output-file.summary'),
       char: 'f',
