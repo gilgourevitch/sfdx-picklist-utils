@@ -29,3 +29,14 @@ End of line to be used in the csv file. "\n" by default.
 # flags.include-columns-labels.summary
 
 Set to True if you want to include column labels.
+
+# examples
+
+Generate a file named output.csv from values of a custom field named mypicklist**c on Account :
+$ sf picklistutils generatefield --field-api-name=Account.mypicklist**c output-file=output.csv --target-org=MYORG
+
+Generate a file named output.csv, with columns names as 1st line, from values of a custom field named mypicklist**c on Account :
+$ sf picklistutils generatefield --field-api-name=Account.mypicklist**c output-file=output.csv --target-org=MYORG -l
+
+Generate a file named output.csv, with columns names as 1st line, from values of a standard field named Type on Account :
+$ sf picklistutils generatefield --field-api-name=AccountType output-file=output.csv --target-org=MYORG -l

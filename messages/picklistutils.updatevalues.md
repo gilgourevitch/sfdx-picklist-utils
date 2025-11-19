@@ -42,18 +42,17 @@ End of line to be used in the csv file. "\n" by default.
 
 End of line to be used in the csv file. "\n" by default.
 
-# examples
-
-To update the Standard Picklist AccountType :
-sf picklistutils updatevalues -a AccountType
-
-To update the Custom Picklist (local or global) named myfield**c on Account object :
-sf picklistutils updatevalues -a Account.myfield**c
-
-# info.hello
-
-info
-
 # flags.has-columns-labels.summary
 
 Set to true if the input file has columns labes, to ignore the first line.
+
+# examples
+
+Import a file named newValues.csv into a custom field named mypicklist**c on Account :
+$ sf picklistutils updatevalues --fieldapiname=Account.mypicklist**c filename=newValues.csv --target-org=MYORG
+
+Import a file named newValues.csv into a custom field named mypicklist**c on Account, and ignore the first line of the csv file, containing columns labels :
+$ sf picklistutils updatevalues --fieldapiname=Account.mypicklist**c filename=newValues.csv -l --target-org=MYORG
+
+Import a file named newValues.csv into a standard field named Type on Account, and ignore the first line of the csv file, containing columns labels :
+$ sf picklistutils updatevalues --fieldapiname=AccountType filename=newValues.csv -l --target-org=MYORG
