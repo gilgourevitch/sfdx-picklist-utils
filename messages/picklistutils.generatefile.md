@@ -1,22 +1,10 @@
 # summary
 
-Summary of a command.
+Generates a csv file with 2 columns "Label" and "API Name". You can then update the csv file, and use it to re-import changes directly.
 
 # description
 
-More information about a command. Don't repeat the summary.
-
-# flags.name.summary
-
-Description of a flag.
-
-# flags.name.description
-
-More information about a flag. Don't repeat the summary.
-
-# examples
-
-- <%= config.bin %> <%= command.id %>
+Generates a csv file with 2 columns "Label" and "API Name". You can then update the csv file, and use it to re-import changes directly.
 
 # flags.output-file.summary
 
