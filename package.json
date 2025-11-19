@@ -1,7 +1,7 @@
 {
   "name": "sfdx-picklist-utils",
   "description": "Toolbox for picklists.",
-  "version": "1.0.21",
+  "version": "1.0.22",
   "dependencies": {
     "@jsforce/jsforce-node": "^3.6.3",
     "@oclif/core": "^4",
