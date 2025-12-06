@@ -3,7 +3,7 @@
   "description": "Toolbox for picklists.",
   "version": "1.0.27",
   "dependencies": {
-    "@jsforce/jsforce-node": "^3.6.3",
+    "@jsforce/jsforce-node": "^3.10.10",
     "@oclif/core": "^4",
     "@salesforce/core": "^8",
     "@salesforce/sf-plugins-core": "^12",
